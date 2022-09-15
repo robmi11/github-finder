@@ -1,6 +1,18 @@
+import { useState, useContext } from "react";
+import GithubContext from "../../context/github/GithubContext";
+
 function UserSearch() {
+  const [searchText, setSearchText] = useState("");
+  const { users, searchUsers, clearUsers } = useContext(GithubContext);
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (searchText === "") {
+      window.alert("Please enter phrase to search");
+    } else {
+      searchUsers(searchText);
+      setSearchText("");
+    }
   };
 
   return (
@@ -11,6 +23,8 @@ function UserSearch() {
             <div className="relative">
               <input
                 type="text"
+                value={searchText}
+                onChange={(event) => setSearchText(event.target.value)}
                 className="w-full pr-40 bg-gray-200 input input-lg text-black"
                 placeholder="Search"
               />
@@ -24,10 +38,13 @@ function UserSearch() {
           </div>
         </form>
       </div>
-
-      <div>
-        <button className="btn btn-ghost btn-lg">Clear</button>
-      </div>
+      {users.length !== 0 && (
+        <div>
+          <button onClick={clearUsers} className="btn btn-ghost btn-lg">
+            Clear
+          </button>
+        </div>
+      )}
     </div>
   );
 }
