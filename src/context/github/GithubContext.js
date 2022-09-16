@@ -1,11 +1,8 @@
 import { createContext, useReducer } from "react";
 import GithubReducer from "./GithubReducer";
-
 const GITHUB_URL = "https://api.github.com";
 
-const initialState = {};
-
-const GithubContext = createContext(initialState);
+const GithubContext = createContext();
 
 export const GithubProvider = ({ children }) => {
   const initialState = {
@@ -23,12 +20,7 @@ export const GithubProvider = ({ children }) => {
 
     try {
       const response = await fetch(
-        `${GITHUB_URL}/search/users?q=${searchText}`,
-        {
-          headers: {
-            Authorization: `token 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`,
-          },
-        }
+        `${GITHUB_URL}/search/users?q=${searchText}`
       );
       const { items } = await response.json();
       dispatch({

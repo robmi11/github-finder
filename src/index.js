@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { GithubProvider } from "./context/github/GithubContext";
+import { AlertProvider } from "./context/alert/AlertContext";
 import "./index.css";
 import App from "./App";
 
@@ -10,7 +11,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <GithubProvider>
-        <App />
+        <AlertProvider>
+          <App />
+        </AlertProvider>
       </GithubProvider>
     </BrowserRouter>
   </React.StrictMode>
