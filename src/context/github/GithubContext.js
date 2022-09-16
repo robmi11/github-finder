@@ -8,6 +8,7 @@ export const GithubProvider = ({ children }) => {
   const initialState = {
     users: [],
     user_profile: {},
+    repos: [],
     loading: false,
   };
 
@@ -38,7 +39,7 @@ export const GithubProvider = ({ children }) => {
     try {
       const response = await fetch(`${GITHUB_URL}/users/${login}`, {
         headers: {
-          Authorization: `token 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`,
+          Authorization: `token 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`,
         },
       });
 
@@ -51,6 +52,23 @@ export const GithubProvider = ({ children }) => {
           payload: data,
         });
       }
+    } catch (error) {
+      console.log(error.message);
+      process.exit(1);
+    }
+  };
+
+  // GET USER REPOS
+  const getUserRepos = async (login) => {
+    setLoading();
+
+    try {
+      const response = await fetch(`${GITHUB_URL}/users/${login}/repos`);
+      const data = await response.json();
+      dispatch({
+        type: "GET_USER_REPOS",
+        payload: data,
+      });
     } catch (error) {
       console.log(error.message);
       process.exit(1);
@@ -71,8 +89,10 @@ export const GithubProvider = ({ children }) => {
         users: state.users,
         user_profile: state.user_profile,
         loading: state.loading,
+        repos: state.repos,
         searchUsers,
         getUserProfile,
+        getUserRepos,
         clearUsers,
       }}
     >
