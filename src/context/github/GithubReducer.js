@@ -6,7 +6,7 @@ const GithubReducer = (state, action) => {
         users: action.payload,
         loading: false,
       };
-    case "GET_PROFILE":
+    case "GET_USER_PROFILE":
       return {
         ...state,
         user_profile: action.payload,
