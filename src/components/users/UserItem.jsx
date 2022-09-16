@@ -15,7 +15,7 @@ function UserItem({ user: { login, avatar_url } }) {
           <h2 className="card-title">{login.toUpperCase()}</h2>
           <Link
             className="text-base-content text-opacity-40 mt-5 btn btn-ghost btn-sm"
-            to={`/users/${login}`}
+            to={`/user/${login}`}
           >
             Visit Profile
           </Link>

@@ -6,6 +6,12 @@ const GithubReducer = (state, action) => {
         users: action.payload,
         loading: false,
       };
+    case "GET_PROFILE":
+      return {
+        ...state,
+        user_profile: action.payload,
+        loading: false,
+      };
     case "SET_LOADING":
       return {
         ...state,
@@ -14,6 +20,8 @@ const GithubReducer = (state, action) => {
     case "CLEAR_USERS":
       return {
         users: [],
+        user_profile: {},
+        loading: false,
       };
     default:
       return state;

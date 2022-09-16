@@ -7,16 +7,15 @@ const GithubContext = createContext();
 export const GithubProvider = ({ children }) => {
   const initialState = {
     users: [],
+    user_profile: {},
     loading: false,
   };
 
   const [state, dispatch] = useReducer(GithubReducer, initialState);
 
+  // GET SEARCH RESULTS
   const searchUsers = async (searchText) => {
     setLoading();
-    const params = new URLSearchParams({
-      q: searchText,
-    });
 
     try {
       const response = await fetch(
@@ -31,7 +30,32 @@ export const GithubProvider = ({ children }) => {
       console.log(error.message);
       process.exit(1);
     }
-  }; // GET SEARCH RESULTS
+  };
+
+  // GET USER PROFILE
+  const getUserProfile = async (login) => {
+    setLoading();
+    try {
+      const response = await fetch(`${GITHUB_URL}/users/${login}`, {
+        headers: {
+          Authorization: `token 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`,
+        },
+      });
+
+      if (response.status === 404) {
+        window.location = "/notfound";
+      } else {
+        const data = await response.json();
+        dispatch({
+          type: "GET_PROFILE",
+          payload: data,
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+      process.exit(1);
+    }
+  };
 
   // SET LOADING
   const setLoading = () => dispatch({ type: "SET_LOADING" });
@@ -45,8 +69,10 @@ export const GithubProvider = ({ children }) => {
     <GithubContext.Provider
       value={{
         users: state.users,
+        user_profile: state.user_profile,
         loading: state.loading,
         searchUsers,
+        getUserProfile,
         clearUsers,
       }}
     >
