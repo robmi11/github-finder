@@ -13,6 +13,16 @@ function About() {
             Hassib Moddasser
           </a>
         </p>
+        <p className="text-lg text-gray-400">
+          Code By:
+          <a
+            className="text-white"
+            href="https://github.com/robmi11/github-finder"
+          >
+            {" "}
+            Robert Mizianty
+          </a>
+        </p>
       </div>
     </section>
   );
