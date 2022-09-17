@@ -3,11 +3,7 @@ const GITHUB_URL = "https://api.github.com";
 // GET SEARCH RESULTS
 export const searchUsers = async (searchText) => {
   try {
-    const response = await fetch(`${GITHUB_URL}/search/users?q=${searchText}`, {
-      headers: {
-        Authorization: `token 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`,
-      },
-    });
+    const response = await fetch(`${GITHUB_URL}/search/users?q=${searchText}`);
     const { items } = await response.json();
     return items;
   } catch (error) {
@@ -19,11 +15,7 @@ export const searchUsers = async (searchText) => {
 // GET USER PROFILE
 export const getUserProfile = async (login) => {
   try {
-    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
-      headers: {
-        Authorization: `token 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`,
-      },
-    });
+    const response = await fetch(`${GITHUB_URL}/users/${login}`);
 
     if (response.status === 404) {
       window.location = "/notfound";
@@ -40,12 +32,9 @@ export const getUserProfile = async (login) => {
 // GET USER REPOS
 export const getUserRepos = async (login) => {
   try {
-    const response = await fetch(`${GITHUB_URL}/users/${login}/repos`, {
-      headers: {
-        Authorization: `token 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`,
-      },
-    });
+    const response = await fetch(`${GITHUB_URL}/users/${login}/repos`);
     const repos = await response.json();
+    console.log(response.status);
     return repos;
   } catch (error) {
     console.log(error.message);

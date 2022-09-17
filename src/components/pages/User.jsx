@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState } from "react";
 
 import GithubContext from "../../context/github/GithubContext";
 import {
@@ -17,9 +17,11 @@ import {
 } from "react-icons/fa";
 
 import Spinner from "../shared/Spinner";
+import Error from "./Error";
 import RepoList from "../repos/RepoList";
 
 function User() {
+  const [showRepos, setShowRepos] = useState(false);
   const { user_login } = useParams();
   const { user_profile, loading, repos, dispatch } = useContext(GithubContext);
   useEffect(() => {
@@ -31,7 +33,9 @@ function User() {
       dispatch({ type: "GET_USER_REPOS", payload: userRepos });
     };
     getUserData();
+    setShowRepos(true);
   }, []);
+
   const {
     name,
     type,
@@ -50,6 +54,7 @@ function User() {
   } = user_profile;
 
   if (loading) return <Spinner />;
+  if (!Array.isArray(repos)) return <Error />;
   return (
     <>
       <div className="w-full mx-auto lg:w-10/12">
@@ -58,7 +63,6 @@ function User() {
             Back To Search
           </Link>
         </div>
-
         <div className="grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 mb-8 md:gap-8">
           <div className="custom-card-image mb-6 md:mb-0">
             <div className="rounded-lg shadow-xl card image-full">
@@ -132,7 +136,6 @@ function User() {
             </div>
           </div>
         </div>
-
         <div className="w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats">
           <div className="stat">
             <div className="stat-figure text-secondary">
@@ -174,8 +177,7 @@ function User() {
             </div>
           </div>
         </div>
-
-        <RepoList repos={repos} />
+        {showRepos && <RepoList repos={repos} />}
       </div>
     </>
   );

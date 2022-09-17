@@ -14,10 +14,10 @@ function UserSearch() {
       setAlert("Please add text to search", "error");
     } else {
       dispatch({ type: "SET_LOADING" });
-      const users = await searchUsers(searchText);
+      const usersData = await searchUsers(searchText);
       dispatch({
         type: "GET_USERS",
-        payload: users,
+        payload: usersData,
       });
       setSearchText("");
     }
