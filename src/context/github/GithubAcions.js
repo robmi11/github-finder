@@ -1,11 +1,15 @@
+import axios from "axios";
+
 const GITHUB_URL = "https://api.github.com";
+const github = axios.create({
+  baseURL: GITHUB_URL,
+});
 
 // GET SEARCH RESULTS
 export const searchUsers = async (searchText) => {
   try {
-    const response = await fetch(`${GITHUB_URL}/search/users?q=${searchText}`);
-    const { items } = await response.json();
-    return items;
+    const response = await github.get(`/search/users?q=${searchText}`);
+    return response.data.items;
   } catch (error) {
     console.log(error.message);
     process.exit(1);
@@ -13,31 +17,15 @@ export const searchUsers = async (searchText) => {
 };
 
 // GET USER PROFILE
-export const getUserProfile = async (login) => {
-  try {
-    const response = await fetch(`${GITHUB_URL}/users/${login}`);
-
-    if (response.status === 404) {
-      window.location = "/notfound";
-    } else {
-      const profile = await response.json();
-      return profile;
-    }
-  } catch (error) {
-    console.log(error.message);
-    process.exit(1);
-  }
-};
-
 // GET USER REPOS
-export const getUserRepos = async (login) => {
-  try {
-    const response = await fetch(`${GITHUB_URL}/users/${login}/repos`);
-    const repos = await response.json();
-    console.log(response.status);
-    return repos;
-  } catch (error) {
-    console.log(error.message);
-    process.exit(1);
-  }
+export const getUser = async (login) => {
+  const [user_profile, user_repos] = await Promise.all([
+    github.get(`/users/${login}`),
+    github.get(`/users/${login}/repos`),
+  ]);
+
+  return {
+    user_profile: user_profile.data,
+    user_repos: user_repos.data,
+  };
 };

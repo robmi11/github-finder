@@ -2,10 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
 
 import GithubContext from "../../context/github/GithubContext";
-import {
-  getUserRepos,
-  getUserProfile,
-} from "../../context/github/GithubAcions";
+import { getUser } from "../../context/github/GithubAcions";
 
 import { Link } from "react-router-dom";
 import {
@@ -23,14 +20,14 @@ import RepoList from "../repos/RepoList";
 function User() {
   const [showRepos, setShowRepos] = useState(false);
   const { user_login } = useParams();
-  const { user_profile, loading, repos, dispatch } = useContext(GithubContext);
+  const { user_profile, loading, user_repos, dispatch } =
+    useContext(GithubContext);
+
   useEffect(() => {
     dispatch({ type: "SET_LOADING" });
     const getUserData = async () => {
-      const userProfile = await getUserProfile(user_login);
-      const userRepos = await getUserRepos(user_login);
-      dispatch({ type: "GET_USER_PROFILE", payload: userProfile });
-      dispatch({ type: "GET_USER_REPOS", payload: userRepos });
+      const userProfile = await getUser(user_login);
+      dispatch({ type: "GET_USER_AND_REPOS", payload: userProfile });
     };
     getUserData();
     setShowRepos(true);
@@ -54,7 +51,7 @@ function User() {
   } = user_profile;
 
   if (loading) return <Spinner />;
-  if (!Array.isArray(repos)) return <Error />;
+  if (!Array.isArray(user_repos)) return <Error />;
   return (
     <>
       <div className="w-full mx-auto lg:w-10/12">
@@ -177,7 +174,7 @@ function User() {
             </div>
           </div>
         </div>
-        {showRepos && <RepoList repos={repos} />}
+        {showRepos && <RepoList repos={user_repos} />}
       </div>
     </>
   );
